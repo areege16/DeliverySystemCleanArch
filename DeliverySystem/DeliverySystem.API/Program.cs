@@ -1,4 +1,8 @@
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System;
+
 namespace DeliverySystem.API
 {
     public class Program
@@ -13,6 +17,11 @@ namespace DeliverySystem.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            //builder.Services.AddDbContext<DataBaseContext>(options =>
+            //{
+            //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                
+            //});
 
             var app = builder.Build();
 
