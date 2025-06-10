@@ -1,7 +1,5 @@
 ﻿using DeliverySystem.Application.DTOs;
 using DeliverySystem.Application.Interfaces;
-using DeliverySystem.Core.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DeliverySystem.API.Controllers

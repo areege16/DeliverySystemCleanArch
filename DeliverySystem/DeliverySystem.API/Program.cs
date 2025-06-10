@@ -37,15 +37,25 @@ namespace DeliverySystem.API
             builder.Services.AddScoped<IDeliveryScheduler, DeliveryScheduler>();
             builder.Services.AddScoped<IProductService, ProductService>();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("MyPolicy", policy =>
+                    policy.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin()
+                );
+            });
+
 
             var app = builder.Build();
 
+            app.UseCors("MyPolicy");
+
+
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
+            //if (app.Environment.IsDevelopment())
+            //{
+            app.UseSwagger();
                 app.UseSwaggerUI();
-            }
+            //}
 
             app.UseHttpsRedirection();
 

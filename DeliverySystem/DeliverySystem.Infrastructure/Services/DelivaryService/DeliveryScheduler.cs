@@ -73,7 +73,7 @@ namespace DeliverySystem.Infrastructure.Services.DelivaryService
 
          bool IsGreenSlot(int hour)
         {
-            return hour >= 20 && hour < 22;
+            return (hour >= 13 && hour < 15) || (hour >= 20 && hour < 22);
         }
     }
 }
