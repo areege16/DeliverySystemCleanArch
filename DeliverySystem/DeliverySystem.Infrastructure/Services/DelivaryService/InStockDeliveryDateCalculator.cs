@@ -3,18 +3,18 @@
 
 namespace DeliverySystem.Infrastructure.Services.DelivaryService
 {
-    class InStockDeliveryDateCalculator: IDeliveryDateCalculator
+    class InStockDeliveryDateCalculator : IDeliveryDateCalculator
     {
         public DateTime Calculate(DateTime OrderTime)
         {
 
             if (OrderTime.Hour < 18)
             {
-                return OrderTime;
+                return OrderTime.Date;
             }
             else
             {
-                return OrderTime.AddDays(1);
+                return OrderTime.Date.AddDays(1);
             }
         }
     }

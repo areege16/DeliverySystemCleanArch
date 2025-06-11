@@ -18,7 +18,7 @@ namespace DeliverySystem.API.Controllers
         [HttpPost("slots")]
         public ActionResult<List<DeliverySlotResponseDTo>> GetDeliverySlots([FromBody] DeliverySlotRequestDTO request)
         {
-            if (request == null || request.Products == null || !request.Products.Any() )
+            if (request == null || request.Products == null || !request.Products.Any())
                 return BadRequest("Product list is required ");
 
             var slots = deliveryScheduler.GetValidDeliverySlots(request);//request.Products, request.OrderTime);

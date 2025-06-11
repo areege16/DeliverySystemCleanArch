@@ -3,8 +3,8 @@ using DeliverySystem.Application.Interfaces;
 
 namespace DeliverySystem.Infrastructure.Services.DelivaryService
 {
-    public class DeliveryScheduler: IDeliveryScheduler
-    { 
+    public class DeliveryScheduler : IDeliveryScheduler
+    {
         public List<DeliverySlotResponseDTo> GetValidDeliverySlots(DeliverySlotRequestDTO request)
         {
             var products = request.Products;
@@ -21,38 +21,51 @@ namespace DeliverySystem.Infrastructure.Services.DelivaryService
                 bool ExternalProduct = products.Any(p => p.Type == ProductType.External);
                 bool isMonday = date.DayOfWeek == DayOfWeek.Monday;
 
-                if (IsWeekday(date)){
-
-                if (!(ExternalProduct && isMonday)) { 
-
-                for (int hour = 8; hour < 22; hour++)
+                if (IsWeekday(date))
                 {
-                    DateTime slotStart = date.AddHours(hour);
-                    DateTime slotEnd = slotStart.AddHours(1);
 
-                    if (slotStart > OrderTime) { 
-                  
-                    bool isGreen = IsGreenSlot(hour);
-
-                    deliverySlots.Add(new DeliverySlotResponseDTo
+                    if (!(ExternalProduct && isMonday))
                     {
-                        StartTime = slotStart,
-                        EndTime = slotEnd,
-                        IsGreenSlot = isGreen
-                    });
+
+                        for (int hour = 8; hour < 22; hour++)
+                        {
+                            DateTime slotStart = date.AddHours(hour);
+                            DateTime slotEnd = slotStart.AddHours(1);
+
+                            if (slotStart > OrderTime)
+                            {
+
+                                bool isGreen = IsGreenSlot(hour);
+
+                                deliverySlots.Add(new DeliverySlotResponseDTo
+                                {
+                                    StartTime = slotStart,
+                                    EndTime = slotEnd,
+                                    IsGreenSlot = isGreen
+                                });
+                            }
+                        }
+                    }
                 }
             }
-        }
-    }
-}
-       return deliverySlots
-                .OrderBy(slot => slot.StartTime.Date)
-                .ThenByDescending(slot => slot.IsGreenSlot)
-                .ThenBy(slot => slot.StartTime)
-                .ToList();
+            var sortedSlots = deliverySlots
+               .OrderBy(slot => slot.StartTime.Date)
+               .ThenByDescending(slot => slot.IsGreenSlot)
+               .ThenBy(slot => slot.StartTime)
+               .ToList();
+
+
+            var pagedSlots = sortedSlots
+           .Skip((request.PageNumber - 1) * request.PageSize)
+           .Take(request.PageSize)
+           .ToList();
+
+
+            return pagedSlots;
+
         }
 
-         DateTime CalculateSlots(List<ProductDto> products, DateTime OrderTime)
+        DateTime CalculateSlots(List<ProductDto> products, DateTime OrderTime)
         {
             List<DateTime> Slots = new List<DateTime>();
 
@@ -66,12 +79,12 @@ namespace DeliverySystem.Infrastructure.Services.DelivaryService
 
         }
 
-         bool IsWeekday(DateTime date)
+        bool IsWeekday(DateTime date)
         {
             return date.DayOfWeek >= DayOfWeek.Monday && date.DayOfWeek <= DayOfWeek.Friday;
         }
 
-         bool IsGreenSlot(int hour)
+        bool IsGreenSlot(int hour)
         {
             return (hour >= 13 && hour < 15) || (hour >= 20 && hour < 22);
         }
